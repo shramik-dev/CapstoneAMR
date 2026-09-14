@@ -192,7 +192,7 @@ year-to-year dynamics within a country. This is reported openly rather than set 
 
 ## License and attribution
 
-Code released under the MIT License (see `LICENSE`).
+Code released under the  License (see `LICENSE`).
 
 The data files in `data/` are public exports from ECDC and Eurostat and remain
 subject to their original terms of use. Please cite the original sources rather than
