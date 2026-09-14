@@ -1,0 +1,120 @@
+==========================================================================
+RQ1  OPTIMAL CONSUMPTION -> RESISTANCE LAG (per pathogen-drug)
+==========================================================================
+  saved /home/claude/Capstone/figures/model/rq1_optimal_lag.png
+Best (|correlation|) lag per combo:
+   E.coli-3rd_gen_cephalosporins       lag 3
+   E.coli-fluoroquinolones             lag 5
+   K.pneumoniae-carbapenems            lag 5
+   S.aureus-MRSA                       lag 3
+   S.pneumoniae-macrolides             lag 1
+
+==========================================================================
+RQ2  FORECAST ACCURACY  (tuned on expanding-window CV, tested once)
+     TEST = last 3 years; tuning via up to 4-fold expanding-window CV on earlier years
+     [AR]  includes resistance_{t-1};  [COV] covariates only
+==========================================================================
+                               test_from  n_dev  n_test  MAE_AR  R2_AR  MAE_COV  R2_COV
+combo                                                                                  
+E.coli-3rd_gen_cephalosporins       2022    140      72   2.579  0.791    3.206   0.680
+E.coli-fluoroquinolones             2022    140      72   2.573  0.841    3.044   0.794
+K.pneumoniae-carbapenems            2022    140      72   4.248  0.849    5.688   0.764
+S.aureus-MRSA                       2022    140      72   2.461  0.917    3.072   0.861
+S.pneumoniae-macrolides             2022    124      68   3.933  0.596    4.490   0.495
+
+Chosen hyperparameters (covariate model):
+   E.coli-3rd_gen_cephalosporins       {'max_features': 'sqrt', 'min_samples_leaf': 1, 'n_estimators': 300}
+   E.coli-fluoroquinolones             {'max_features': 'sqrt', 'min_samples_leaf': 1, 'n_estimators': 300}
+   K.pneumoniae-carbapenems            {'max_features': 'sqrt', 'min_samples_leaf': 1, 'n_estimators': 300}
+   S.aureus-MRSA                       {'max_features': 'sqrt', 'min_samples_leaf': 1, 'n_estimators': 300}
+   S.pneumoniae-macrolides             {'max_features': 'sqrt', 'min_samples_leaf': 1, 'n_estimators': 300}
+  saved /home/claude/Capstone/figures/model/rq2_pred_vs_actual.png
+
+==========================================================================
+RQ3  PREDICTOR IMPORTANCE PER PATHOGEN (permutation importance)
+     covariate-only, tuned model; importance measured on TEST years
+==========================================================================
+
+E.coli-3rd_gen_cephalosporins  -- top 8 predictors:
+ddd_J01D_lag2    0.0241
+ddd_J01D_lag1    0.0172
+ddd_J01M_lag2    0.0167
+pop_density      0.0111
+ddd_J01M_lag5    0.0105
+ddd_J01M_lag1    0.0102
+ddd_J01A_lag4    0.0097
+ddd_J01F_lag1    0.0092
+
+E.coli-fluoroquinolones  -- top 8 predictors:
+ddd_J01M_lag1    0.0344
+ddd_J01M_lag2    0.0258
+cdd              0.0179
+ddd_J01M_lag3    0.0165
+ddd_J01D_lag2    0.0130
+ddd_J01M_lag5    0.0122
+ddd_J01F_lag1    0.0116
+ddd_J01D_lag1    0.0106
+
+K.pneumoniae-carbapenems  -- top 8 predictors:
+ddd_J01D_lag5    0.0556
+ddd_J01M_lag2    0.0512
+ddd_J01M_lag1    0.0476
+ddd_J01M_lag3    0.0419
+ddd_J01D_lag4    0.0324
+ddd_J01D_lag2    0.0256
+ddd_J01G_lag3    0.0238
+cdd              0.0235
+
+S.aureus-MRSA  -- top 8 predictors:
+cdd              0.0555
+ddd_J01M_lag1    0.0146
+hdd              0.0114
+ddd_J01A_lag5    0.0111
+ddd_J01M_lag2    0.0104
+ddd_J01C_lag5    0.0102
+ddd_J01C_lag3    0.0082
+ddd_J01M_lag4    0.0076
+
+S.pneumoniae-macrolides  -- top 8 predictors:
+ddd_J01M_lag5    0.0248
+ddd_J01D_lag5    0.0222
+ddd_J01D_lag4    0.0171
+ddd_J01M_lag2    0.0131
+ddd_J01G_lag4    0.0119
+ddd_J01G_lag2    0.0112
+ddd_J01F_lag2    0.0106
+ddd_J01C_lag2    0.0086
+
+Share of importance by predictor family (rows sum to 1):
+                               climate  consumption  demographic
+E.coli-3rd_gen_cephalosporins    0.030        0.916        0.054
+E.coli-fluoroquinolones          0.093        0.898        0.009
+K.pneumoniae-carbapenems         0.044        0.943        0.013
+S.aureus-MRSA                    0.304        0.674        0.021
+S.pneumoniae-macrolides          0.043        0.978       -0.020
+  saved /home/claude/Capstone/figures/model/rq3_family_importance.png
+
+==========================================================================
+RQ4  POOLED (tuned) ML vs NAIVE and SINGLE-COUNTRY BASELINES
+     all models covariate-only; evaluated on the held-out TEST years
+==========================================================================
+                               naive_MAE  single_MAE  pooled_MAE
+combo                                                           
+E.coli-3rd_gen_cephalosporins      1.464       2.381       3.590
+E.coli-fluoroquinolones            1.861       3.334       3.338
+K.pneumoniae-carbapenems           1.982       3.715       5.210
+S.aureus-MRSA                      1.491       4.062       3.470
+S.pneumoniae-macrolides            3.014       5.581       4.906
+
+Skill vs naive (positive = pooled better):
+combo
+E.coli-3rd_gen_cephalosporins    -145.2 %
+E.coli-fluoroquinolones           -79.4 %
+K.pneumoniae-carbapenems         -162.9 %
+S.aureus-MRSA                    -132.7 %
+S.pneumoniae-macrolides           -62.8 %
+  saved /home/claude/Capstone/figures/model/rq4_model_comparison.png
+
+==========================================================================
+DONE. Figures in .//home/claude/Capstone/figures/model/
+==========================================================================
