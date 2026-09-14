@@ -1,0 +1,9 @@
+# Core analysis stack. Minimum versions known to work; newer releases are fine.
+pandas>=1.5
+numpy>=1.23
+scikit-learn>=1.2
+matplotlib>=3.6
+seaborn>=0.12
+openpyxl>=3.1
+scipy>=1.10
+statsmodels>=0.14
